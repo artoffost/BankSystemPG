@@ -11,10 +11,9 @@ class Bank
 
     public void ViewOption()
     {
-        Console.WriteLine("[1] View Balance\n[2] Withdraw\n[3] Deposit\n[4] Exit");
+        Console.WriteLine("[1] View Balance\n[2] Withdraw\n[3] Deposit\n[4] Transfer Money\n[5] Exit");
         Console.Write("Choose: ");
         int choice = int.Parse(Console.ReadLine()!);
-
         switch (choice)
         {
             case 1:
@@ -34,6 +33,22 @@ class Bank
                 ViewOption();
                 return;
             case 4:
+                Console.Write("Enter receiver username: ");
+                string receiver = Console.ReadLine()!;
+                if (IsValidUser(receiver))
+                {
+                    Console.Write("Enter amount: ");
+                    decimal transferAmount = decimal.Parse(Console.ReadLine()!);
+                    TransferMoney(receiver, transferAmount);
+                }
+                else
+                {
+                    Console.WriteLine("Username does not exists!");
+                }
+                ViewOption();
+                return;
+
+            case 5:
                 Console.WriteLine("Thank you for using the system\n");
                 return;
         }
@@ -102,5 +117,46 @@ class Bank
         {
             Console.WriteLine("Withdraw Failed\n");
         }
+    }
+    public void TransferMoney(string receiver, decimal amount)
+    {
+        if (ViewBalance() < amount)
+        {
+            Console.WriteLine("Not Enough Balance\n");
+            return;
+        }
+        string query = "UPDATE balance SET amount = amount + @amount WHERE username = @username";
+
+        var parameters = new[] 
+        {
+            new NpgsqlParameter("@amount", amount),
+            new NpgsqlParameter("@username", receiver)
+        };
+
+        if (database.TryExecuteQuery(query, parameters))
+        {
+            Console.WriteLine($"Successfully transferred {amount} to {receiver}\n");
+        }
+        else
+        {
+            Console.WriteLine("Transferred Failed\n");
+        }
+    }
+    public bool IsValidUser(string username)
+    {
+        string query = "SELECT username FROM users WHERE username = @username";
+        var parameters = new[]
+        {
+            new NpgsqlParameter("@username", username)
+        };
+
+        bool isValid = false;
+        database.ReadData(query, parameters, reader => {
+            if (reader.Read())
+            {
+                isValid = true;
+            }
+        });
+        return isValid;
     }
 }
