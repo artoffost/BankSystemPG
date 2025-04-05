@@ -56,11 +56,15 @@ void Login()
             else
             {
                 Console.WriteLine("Login Failed! Invalid Credentials\n");
+                Main();
+                return;
             }
         }
         else
         {
-            Console.WriteLine("cant read\n");
+            Console.WriteLine("User does not exist!\n");
+            Main();
+            return;
         }
     });
 

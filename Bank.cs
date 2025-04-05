@@ -11,7 +11,7 @@ class Bank
 
     public void ViewOption()
     {
-        Console.WriteLine("[1] View Balance\n[2] Withdraw\n[3] Deposit\n[4] Transfer Money\n[5] Exit");
+        Console.WriteLine("[1] View Balance\n[2] Withdraw\n[3] Deposit\n[4] Transfer Money\n[5] Delete Account\n[6] Exit");
         Console.Write("Choose: ");
         int choice = int.Parse(Console.ReadLine()!);
         switch (choice)
@@ -47,8 +47,18 @@ class Bank
                 }
                 ViewOption();
                 return;
-
             case 5:
+                Console.WriteLine("Are you sure you want to delete your account? Your balance will be remove too \n[1] Yes \n[2] No");
+                Console.Write("Choose: ");
+                int deleteOption = int.Parse(Console.ReadLine()!);
+                if (deleteOption == 1)
+                {
+                    DeleteUser();
+                    break;
+                }
+                ViewOption();
+                return;
+            case 6:
                 Console.WriteLine("Thank you for using the system\n");
                 return;
         }
@@ -158,5 +168,22 @@ class Bank
             }
         });
         return isValid;
+    }
+    public void DeleteUser()
+    {
+        string query = "DELETE FROM users WHERE username = @username";
+        var parameters = new[]
+        {
+            new NpgsqlParameter("@username", _username)
+        };
+
+        if (database.TryExecuteQuery(query, parameters))
+        {
+            Console.WriteLine("Succesfully deleted your account!");
+        }
+        else
+        {
+            Console.WriteLine("Account deletion failed!");
+        }
     }
 }
