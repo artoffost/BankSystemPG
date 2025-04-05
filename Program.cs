@@ -36,11 +36,11 @@ void Login()
     Console.Write("Enter Password: ");
     user.Password = Console.ReadLine()!;
 
-    string query = "SELECT password FROM Users WHERE username = @username";
+    string query = "";
 
     var parameters = new[]
     {
-        new NpgsqlParameter("@username", user.Username)
+        new NpgsqlParameter("", user.Username)
     };
 
     database.ReadData(query, parameters, reader => {
@@ -96,23 +96,22 @@ void SignUp()
     }
 
     // Saving credentials to the balance table
-    string userQuery = "INSERT INTO users (username, password, firstname, lastname) " +
-                    "VALUES (@username, @password, @firstname, @lastname)";
+    string userQuery = "";
 
     var userParameters = new[]
     {
-        new NpgsqlParameter("@username", newUser.Username),
-        new NpgsqlParameter("@password", newUser.Password),
-        new NpgsqlParameter("@firstname", newUser.FirstName),
-        new NpgsqlParameter("@lastname", newUser.LastName)
+        new NpgsqlParameter("", newUser.Username),
+        new NpgsqlParameter("", newUser.Password),
+        new NpgsqlParameter("", newUser.FirstName),
+        new NpgsqlParameter("", newUser.LastName)
     };
 
 
     // Saving credentials to the balance table
-    string balanceQuery = "INSERT INTO balance (username) VALUES (@username)";
+    string balanceQuery = "";
     var balanceParameters = new[]
     {
-        new NpgsqlParameter("@username", newUser.Username),
+        new NpgsqlParameter("", newUser.Username),
     };
  
     if (database.TryExecuteQuery(userQuery, userParameters) && 
@@ -129,11 +128,11 @@ void SignUp()
 
 bool HasUsernameExists(string username)
 {
-    string query = "SELECT username FROM users WHERE username = @username";
+    string query = "";
 
     var parameters = new[]
     {
-        new NpgsqlParameter("@username", username)
+        new NpgsqlParameter("", username)
     };
 
     bool hasUsername = false;

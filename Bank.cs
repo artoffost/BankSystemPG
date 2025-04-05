@@ -66,10 +66,10 @@ class Bank
 
     public decimal ViewBalance()
     {
-        string query = "SELECT amount FROM balance WHERE username = @username";
+        string query = "";
         var parameters = new[]
         {
-            new NpgsqlParameter("@username", _username)
+            new NpgsqlParameter("", _username)
         };
 
         decimal amount = 0;
@@ -86,12 +86,12 @@ class Bank
     public void Deposit(decimal amount)
     {
         
-        string query = "UPDATE balance SET amount = amount + @amount WHERE username = @username";
+        string query = "";
 
         var parameters = new[] 
         {
-            new NpgsqlParameter("@amount", amount),
-            new NpgsqlParameter("@username", _username)
+            new NpgsqlParameter("", amount),
+            new NpgsqlParameter("", _username)
         };
 
         if (database.TryExecuteQuery(query, parameters))
@@ -111,12 +111,12 @@ class Bank
             return;
         }
 
-        string query = "UPDATE balance SET amount = amount - @amount WHERE username = @username";
+        string query = "";
 
         var parameters = new[] 
         {
-            new NpgsqlParameter("@amount", amount),
-            new NpgsqlParameter("@username", _username)
+            new NpgsqlParameter("", amount),
+            new NpgsqlParameter("", _username)
         };
 
         if (database.TryExecuteQuery(query, parameters))
@@ -135,12 +135,12 @@ class Bank
             Console.WriteLine("Not Enough Balance\n");
             return;
         }
-        string query = "UPDATE balance SET amount = amount + @amount WHERE username = @username";
+        string query = "";
 
         var parameters = new[] 
         {
-            new NpgsqlParameter("@amount", amount),
-            new NpgsqlParameter("@username", receiver)
+            new NpgsqlParameter("", amount),
+            new NpgsqlParameter("", receiver)
         };
 
         if (database.TryExecuteQuery(query, parameters))
@@ -154,10 +154,10 @@ class Bank
     }
     public bool IsValidUser(string username)
     {
-        string query = "SELECT username FROM users WHERE username = @username";
+        string query = "";
         var parameters = new[]
         {
-            new NpgsqlParameter("@username", username)
+            new NpgsqlParameter("", username)
         };
 
         bool isValid = false;
@@ -171,10 +171,10 @@ class Bank
     }
     public void DeleteUser()
     {
-        string query = "DELETE FROM users WHERE username = @username";
+        string query = "";
         var parameters = new[]
         {
-            new NpgsqlParameter("@username", _username)
+            new NpgsqlParameter("", _username)
         };
 
         if (database.TryExecuteQuery(query, parameters))
